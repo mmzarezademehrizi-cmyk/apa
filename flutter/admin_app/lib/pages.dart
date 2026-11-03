@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'auth.dart';
 import 'state.dart';
 import 'widgets.dart';
 
@@ -231,6 +232,12 @@ class Sidebar extends StatelessWidget {
                 ),
               ),
             const Spacer(),
+            TextButton.icon(
+              onPressed: () => confirmLogout(context),
+              icon: const Icon(Icons.logout, size: 18, color: kRed),
+              label: Text('خروج (${auth.masked})', style: const TextStyle(color: kRed, fontSize: 13)),
+            ),
+            const SizedBox(height: 6),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(color: p.chip, borderRadius: BorderRadius.circular(12)),

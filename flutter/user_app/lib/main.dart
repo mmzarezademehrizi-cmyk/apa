@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'auth.dart';
 import 'home.dart';
 import 'state.dart';
 import 'widgets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  auth = AuthService('echo_payam_user');
+  await auth.load();
   await app.load();
   runApp(const EchoPayamApp());
 }
@@ -73,7 +76,7 @@ class EchoPayamApp extends StatelessWidget {
           // RTL به‌صورت پیش‌فرض (بدون نیاز به flutter_localizations)
           builder: (context, child) =>
               Directionality(textDirection: TextDirection.rtl, child: child!),
-          home: const HomeShell(),
+          home: const AuthGate(child: HomeShell()),
         );
       },
     );

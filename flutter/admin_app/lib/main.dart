@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'auth.dart';
 import 'pages.dart';
 import 'state.dart';
 import 'widgets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  auth = AuthService('echo_payam_admin');
+  await auth.load();
   await admin.load();
   runApp(const AdminApp());
 }
@@ -55,7 +58,7 @@ class AdminApp extends StatelessWidget {
           theme: _theme(Brightness.light),
           darkTheme: _theme(Brightness.dark),
           builder: (context, child) => Directionality(textDirection: TextDirection.rtl, child: child!),
-          home: const AdminShell(),
+          home: const AuthGate(adminMode: true, child: AdminShell()),
         );
       },
     );

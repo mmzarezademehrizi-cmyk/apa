@@ -116,6 +116,26 @@ tr.click{cursor:pointer}tr.click:hover td{background:var(--field)}
 .empty{text-align:center;color:var(--mut);padding:30px}
 @media(max-width:1100px){.grid{grid-template-columns:1fr}}
 @media(max-width:900px){aside{position:fixed;inset-block:0;inset-inline-start:0;transform:translateX(100%);transition:.25s;box-shadow:0 0 40px rgba(0,0,0,.2)}aside.open{transform:none}.menu{display:grid}.page{padding:16px}.bar{padding:10px 14px}.bar .adm span{display:none}.hd h2{font-size:20px}}
+.auth{flex:1;min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px;overflow-y:auto;background:radial-gradient(900px 420px at 50% -8%,rgba(37,99,235,.2),transparent),var(--bg)}
+.authov{position:fixed;inset:0;z-index:100;display:flex;background:var(--bg)}
+.acard{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px 22px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px -20px rgba(15,23,42,.3)}
+.alogo{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;display:grid;place-items:center;margin:0 auto}
+.acard h1{text-align:center;font-size:22px;color:var(--ink)}
+.asub{text-align:center;color:var(--mut);font-size:14px;margin-top:-6px}
+.atabs{display:flex;background:var(--field);border-radius:99px;padding:4px}
+.atabs button{flex:1;padding:8px;border-radius:99px;font-weight:600;font-size:14px;color:var(--mut)}
+.atabs button.on{background:var(--card);color:var(--pri);box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.acard label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink)}
+.acard input{width:100%;border:1px solid var(--line);background:var(--field);border-radius:12px;padding:11px 14px;font:inherit;color:var(--ink);outline:0;text-align:left}
+.acard input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+.pw{position:relative;display:block}
+.pw input{padding-inline-start:64px}
+.pw button{position:absolute;inset-inline-start:6px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--pri);font-weight:700;padding:4px 8px}
+.hint{color:var(--mut);font-size:12px;margin-top:-4px}
+.aerr{min-height:20px;color:var(--red);font-size:13px;font-weight:600}
+.abtn{background:var(--pri);color:#fff;border-radius:99px;padding:12px;font-weight:700;font-size:15px}
+.abtn:disabled{opacity:.6}
+.anote{text-align:center;color:var(--mut);font-size:11.5px}
 </style>
 </head>
 <body>
@@ -195,7 +215,7 @@ const route=()=>location.hash.slice(1)||'verify';
 const NAV=[['dash','grid','داشبورد اصلی'],['verify','shield','مدیریت کاربران و نشان تأیید'],['reports','flag','گزارش‌ها و تخلفات'],['groups','users','کانال‌ها و گروه‌ها'],['settings','sliders','تنظیمات سیستم']];
 function shell(){const r=route();
  $('#side').innerHTML=`<div class="brand"><span class="lg">${ic('shield',22)}</span><div><b>پیام‌رسان پیام</b><small>پنل مدیریت و پایش هوشمند</small></div></div><div class="live"><i></i>سرویس برخط و پایدار</div>${NAV.map(([k,i,l])=>`<a data-go="${k}" class="${r===k?'on':''}">${ic(i,20)}${l}</a>`).join('')}<div class="ver"><span>نسخه سامانه<br><b>v3.4.2</b></span><span>موقعیت سرور<br>تهران (مرکزی)</span></div>`;
- $('#bar').innerHTML=`<button class="ib menu" data-act="menu" aria-label="منو">${ic('menu',22)}</button><div class="s">${ic('search',18)}<input id="gs" placeholder="جستجوی کاربر، شناسه، گزارش یا کانال..." autocomplete="off"></div><div class="adm"><button class="ib" data-act="theme" aria-label="تم">${ic('moon',18)}</button><button class="ib" data-toast="۳ اعلان جدید">${ic('bell',18)}<span class="d"></span></button><span style="width:1px;height:28px;background:var(--line)"></span>${av('مدیر ارشد',36)}<span><b>مدیر ارشد سامانه</b><small>سطح دسترسی: کل</small></span></div>`}
+ $('#bar').innerHTML=`<button class="ib menu" data-act="menu" aria-label="منو">${ic('menu',22)}</button><div class="s">${ic('search',18)}<input id="gs" placeholder="جستجوی کاربر، شناسه، گزارش یا کانال..." autocomplete="off"></div><div class="adm"><button class="ib" data-act="theme" aria-label="تم">${ic('moon',18)}</button><button class="ib" data-toast="۳ اعلان جدید">${ic('bell',18)}<span class="d"></span></button><button class="ib" data-act="logout" aria-label="خروج" title="خروج">${ic('lock',18)}</button><span style="width:1px;height:28px;background:var(--line)"></span>${av('مدیر ارشد',36)}<span><b>مدیر ارشد سامانه</b><small>سطح دسترسی: کل</small></span></div>`}
 const vc=()=>1240+S.vd,pc=()=>Math.max(0,38+S.pd);
 const kpi=(l,v,s,c='',i='')=>`<div class="kpi ${c}"><div class="l">${i}${l}</div><div class="v">${v}</div><small>${s}</small></div>`;
 function usersFiltered(){return S.users.filter(u=>(uf==='all'||(uf==='blue'&&['blue','org'].includes(u.b))||(uf==='pending'&&u.b==='pending')||(uf==='vip'&&u.t==='vip')||(uf==='channel'&&u.t==='channel')||(uf==='susp'&&u.s==='suspended'))&&(!uq||(u.n+u.u).includes(uq)))}
@@ -230,7 +250,10 @@ function reportsView(){return S.view==='done'?doneView():benchView()}
 function dashView(){return `<div class="hd"><div><h2>داشبورد اصلی</h2><p>نمای کلی سلامت سامانه و کارهای در انتظار مدیریت.</p></div></div><div class="kpis">${kpi('کل کاربران فعال',nf(4852100),'همه سرورها برخط','',ic('users',18))}${kpi('تیک آبی',nf(vc()),'+'+fa(S.vd)+' در این نشست','',ic('shieldOk',18))}${kpi('تأیید در انتظار',fa(pc()),'نیازمند بررسی','red',ic('clock',18))}${kpi('تخلف در صف',fa(S.urgent),'۲۲ مورد بحرانی','warn',ic('flag',18))}</div><div class="pc"><div class="card"><h3>${ic('shield',18)}تأیید هویت</h3><p style="color:var(--mut);font-size:13px">${fa(S.queue.length)} درخواست اولویت‌دار در صف است.</p><a class="btn p" data-go="verify">رفتن به صف</a></div><div class="card"><h3>${ic('flag',18)}تخلفات</h3><p style="color:var(--mut);font-size:13px">پرونده ${fa(S.sel)} روی میز بازرس باز است.</p><a class="btn p" data-go="reports">رفتن به میز بازرس</a></div></div>`}
 function groupsView(){const rows=[['کانال تکنولوژی و هوش مصنوعی','کانال','۱۲٬۸۰۰','فعال'],['تیم طراحی محصول','گروه','۱۱','فعال'],['جشنواره ارز دیجیتال','گروه','۴٬۲۱۰','تحت بررسی'],['کانال اخبار و تکنولوژی','کانال','۹۸٬۰۰۰','فعال']];return `<div class="hd"><div><h2>کانال‌ها و گروه‌ها</h2><p>فهرست کانال‌ها و گروه‌های پرمخاطب سامانه.</p></div></div><div class="tw card" style="padding:0"><table><thead><tr><th>نام</th><th>نوع</th><th>اعضا</th><th>وضعیت</th></tr></thead><tbody>${rows.map(r=>`<tr><td><div class="usr">${av(r[0])}<b>${r[0]}</b></div></td><td>${r[1]}</td><td>${r[2]}</td><td>${pill(r[3]==='فعال'?'g':'y',r[3])}</td></tr>`).join('')}</tbody></table></div>`}
 function settingsView(){return `<div class="hd"><div><h2>تنظیمات سیستم</h2></div></div><section class="card" style="max-width:520px"><label class="tg">تم تیره<input type="checkbox" data-act="theme" ${S.dark?'checked':''}></label><label class="tg">اقدام خودکار هوش مصنوعی (Active AI Guard)<input type="checkbox" checked></label><label class="tg">اعلان بحرانی به ایمیل مدیر<input type="checkbox" checked></label><div class="rowb">${deferred?`<button class="btn p" data-act="install">نصب پنل روی دستگاه</button>`:''}<button class="btn r" data-act="resetall">بازنشانی داده‌های نمونه</button></div></section>`}
-function render(){shell();$('#pg').innerHTML={dash:dashView,verify:verifyView,reports:reportsView,groups:groupsView,settings:settingsView}[route()]?.()||verifyView();document.documentElement.dataset.theme=S.dark?'dark':'';$('#tc').content=S.dark?'#0b1220':'#0f172a'}
+function render(){document.documentElement.dataset.theme=S.dark?'dark':'';let ov=$('#authov');
+ if(!Auth.user()){if(!ov){ov=document.createElement('div');ov.id='authov';ov.className='authov';document.body.append(ov)}ov.innerHTML=Auth.view();Auth.bind(render);return}
+ if(ov)ov.remove();
+ shell();$('#pg').innerHTML={dash:dashView,verify:verifyView,reports:reportsView,groups:groupsView,settings:settingsView}[route()]?.()||verifyView();document.documentElement.dataset.theme=S.dark?'dark':'';$('#tc').content=S.dark?'#0b1220':'#0f172a'}
 function openModal(){const c=S.cases.find(x=>x.id===S.sel);modal=true;const m=document.createElement('div');m.className='mod';m.id='mod';
  m.innerHTML=`<div class="box" role="dialog" aria-modal="true"><div class="rowb" style="justify-content:space-between"><div><h3 style="font-size:18px">تأیید نهایی مسدودسازی و ارجاع پرونده به مراجع نظارتی</h3><span class="mono">REP-#${fa(c.id)} · @${c.u}</span></div><button class="ib" data-act="mclose" aria-label="بستن">${ic('x',20)}</button></div><div class="form"><label>انتخاب مستندات و دلایل قانونی تخلف</label>${[['ماده ۷۴۱ قانون جرایم رایانه‌ای','کلاهبرداری مرتبط با رایانه؛ نقض امنیت داده‌ها و سرقت اطلاعات اعتباری'],['ماده ۷۴۶ قانون جرایم رایانه‌ای','جعل سامانه‌های رسمی و ایجاد صفحات فیشینگ'],['بند ۲ شرایط و ضوابط عمومی','ارسال انبوه و بدافزار یا بهره‌برداری غیرمجاز'],['نقض حریم خصوصی و فریب مالی','تلاش سازمان‌یافته برای تصاحب دارایی دیجیتال']].map((r,i)=>`<label class="radio"><input type="radio" name="basis" value="${r[0]}" ${i?'':'checked'}><span>${r[0]}<small>${r[1]}</small></span></label>`).join('')}</div><div class="form"><label>دامنه و شیوه اعمال محدودیت (اقدام چندلایه)</label><label class="tg">مسدودسازی دائم حساب کاربری و سلب مالکیت شناسه<input type="checkbox" id="m1" checked></label><label class="tg">بن دائمی IP و شناسه سخت‌افزار دستگاه‌ها<input type="checkbox" id="m2" checked></label><label class="tg">حذف خودکار تمام پیام‌ها و لینک‌های آلوده<input type="checkbox" id="m3" checked></label><label class="tg">ارسال خودکار مستندات به پلیس فتا و مراجع قضایی<input type="checkbox" id="m4" checked></label><label>یادداشت بازرس<textarea id="mnote" rows="3">بر اساس بررسی کارشناس امنیت سایبری و الگوریتم‌های هوش مصنوعی، تخلف فیشینگ ثابت شده و اقدام عاجل مسدودسازی قطعی اعمال می‌گردد.</textarea></label></div><div class="rowb" style="justify-content:space-between;align-items:center"><small style="color:var(--red)">توجه: این اقدام غیرقابل بازگشت بوده و کلیه نشست‌های فعال کاربر بلافاصله خاتمه می‌یابد.</small><div class="rowb"><button class="btn g" data-act="mclose">انصراف و بازگشت به میز کار</button><button class="btn r" data-act="mok">${ic('lock',14)}تأیید نهایی و مسدودسازی ابدی</button></div></div></div>`;document.body.append(m)}
 const closeModal=()=>{const m=$('#mod');m&&m.remove();modal=false};
@@ -246,6 +269,7 @@ document.addEventListener('click',e=>{const t=e.target,go=t.closest('[data-go]')
   else if(k==='susp'){const x=S.users.find(y=>y.u===u);x.s=x.s==='active'?'suspended':'active';save();$('#ut').innerHTML=utable()}
   else if(k==='qok'||k==='qno'){const q=S.queue.splice(+a.dataset.i,1)[0];S.pd--;if(k==='qok'){S.vd++;const x=S.users.find(y=>y.u===q.u);if(x)x.b='blue'}save();toast(k==='qok'?'تیک آبی اعطا شد':'درخواست رد شد');render()}
   else if(k==='reset'){uf='all';uq='';up=1;render()}
+  else if(k==='logout'){if(confirm('از پنل خارج می‌شوید؟')){Auth.logout();render()}}
   else if(k==='export'||k==='pdf'||k==='bulk')toast(k==='bulk'?'اقدام دسته‌جمعی در این نسخه نمایشی غیرفعال است':'خروجی در حال آماده‌سازی…');
   else if(k==='cact')cact(a.dataset.k);
   else if(k==='banm')openModal();
@@ -270,6 +294,65 @@ document.addEventListener('submit',e=>{if(e.target.id!=='grantForm')return;e.pre
  setBadge(u,b);toast('نشان تأیید برای @'+u+' ثبت شد');render()});
 window.addEventListener('hashchange',()=>{render();scrollTo(0,0)});
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e});
+/* ───── Auth (محلی؛ بعداً با بک‌اند واقعی جایگزین می‌شود) ───── */
+const Auth=(()=>{
+const ADMIN=true,K='payam-admin-auth-v1',SK='payam-admin-session-v1';
+let mode='login',err='',busy=false,idv='',done=()=>{};
+const rd=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+const wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const DB=()=>rd(K,{users:[],lock:{n:0,until:0}});
+const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b)));
+const unb=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const en=s=>s.replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+async function hash(pw,salt){const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveBits']);return b64(await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt,iterations:150000},k,256))}
+function ident(v){v=en(String(v).trim());if(!v)return null;
+ if(v.includes('@')){v=v.toLowerCase();return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)?{t:'email',v}:null}
+ let p=v.replace(/[\s\-()+]/g,'');if(p.startsWith('0098'))p='0'+p.slice(4);else if(p.startsWith('98'))p='0'+p.slice(2);
+ return /^09\d{9}$/.test(p)?{t:'phone',v:p}:null}
+async function register(idr,pw,pw2){
+ if(!(window.crypto&&crypto.subtle))return'مرورگر از رمزنگاری پشتیبانی نمی‌کند (آدرس باید HTTPS باشد)';
+ const id=ident(idr);if(!id)return'ایمیل یا شماره موبایل معتبر وارد کنید (مثال: 09121234567)';
+ if(pw.length<8||!/\d/.test(pw)||!/\p{L}/u.test(pw))return'رمز عبور باید حداقل ۸ کاراکتر و شامل حرف و عدد باشد';
+ if(pw!==pw2)return'تکرار رمز عبور با رمز عبور یکسان نیست';
+ const d=DB();
+ if(ADMIN&&d.users.length)return'حساب مدیر قبلاً ایجاد شده است';
+ if(d.users.some(u=>u.v===id.v))return'این حساب قبلاً ثبت‌نام کرده است';
+ const salt=crypto.getRandomValues(new Uint8Array(16));
+ const u={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),t:id.t,v:id.v,s:b64(salt),h:await hash(pw,salt),at:Date.now()};
+ d.users.push(u);wr(K,d);wr(SK,{uid:u.id});return null}
+async function login(idr,pw){
+ if(!(window.crypto&&crypto.subtle))return'مرورگر از رمزنگاری پشتیبانی نمی‌کند (آدرس باید HTTPS باشد)';
+ const d=DB(),now=Date.now();d.lock=d.lock||{n:0,until:0};
+ if(d.lock.until>now)return'تلاش ناموفق زیاد بود؛ '+fa(Math.ceil((d.lock.until-now)/1000))+' ثانیه صبر کنید';
+ const id=ident(idr),u=id&&d.users.find(x=>x.v===id.v);
+ const ok=u&&(await hash(pw,unb(u.s)))===u.h;
+ if(!ok){d.lock.n++;if(d.lock.n>=5)d.lock={n:0,until:now+30000};wr(K,d);return'ایمیل/شماره یا رمز عبور اشتباه است'}
+ d.lock={n:0,until:0};wr(K,d);wr(SK,{uid:u.id});return null}
+const user=()=>{const s=rd(SK,null);return s&&DB().users.find(u=>u.id===s.uid)||null};
+const logout=()=>{try{localStorage.removeItem(SK)}catch(e){}mode='login';err='';idv='';busy=false};
+const mask=()=>{const u=user();if(!u)return'';return u.t==='email'?u.v[0]+'***'+u.v.slice(u.v.indexOf('@')-1):u.v.slice(0,4)+'***'+u.v.slice(-4)};
+const first=()=>ADMIN&&!DB().users.length;
+const isReg=()=>ADMIN?first():mode==='reg';
+function view(){const reg=isReg();
+ const sub=ADMIN?(reg?'ایجاد حساب مدیر (اولین ورود)':'ورود به پنل مدیریت'):(reg?'ایجاد حساب جدید':'ورود به حساب');
+ const pwf=(n,l,ac)=>`<label>${l}<span class="pw"><input name="${n}" type="password" dir="ltr" autocomplete="${ac}" required><button type="button" data-a="eye">نمایش</button></span></label>`;
+ return `<div class="auth"><form class="acard" id="af" novalidate><div class="alogo"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ADMIN?'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>':'<path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/>'}</svg></div><h1>${ADMIN?'پنل مدیریت پیام':'پیام'}</h1><p class="asub">${sub}</p>
+${ADMIN?'':`<div class="atabs"><button type="button" data-a="tab" data-m="login" class="${reg?'':'on'}">ورود</button><button type="button" data-a="tab" data-m="reg" class="${reg?'on':''}">ثبت‌نام</button></div>`}
+<label>ایمیل یا شماره موبایل<input name="id" dir="ltr" autocomplete="username" inputmode="email" placeholder="name@example.com  یا  09123456789" value="${esc(idv)}" required></label>
+${pwf('pw','رمز عبور',reg?'new-password':'current-password')}${reg?pwf('pw2','تکرار رمز عبور','new-password')+'<small class="hint">حداقل ۸ کاراکتر، شامل حرف و عدد</small>':''}
+<div class="aerr" role="alert">${esc(err)}</div><button class="abtn" ${busy?'disabled':''}>${busy?'لطفاً صبر کنید…':reg?'ثبت‌نام':'ورود'}</button>
+<p class="anote">فعلاً حساب‌ها فقط روی همین مرورگر ذخیره می‌شوند.</p></form></div>`}
+const redraw=()=>{const a=document.querySelector('.auth');if(a)a.outerHTML=view()};
+const keep=()=>{const i=document.querySelector('#af [name=id]');if(i)idv=i.value};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;
+ if(t.dataset.a==='tab'){keep();mode=t.dataset.m;err='';redraw()}
+ else if(t.dataset.a==='eye'){const ins=[...document.querySelectorAll('#af [name^=pw]')],h=ins[0].type==='password';ins.forEach(i=>i.type=h?'text':'password');document.querySelectorAll('#af [data-a=eye]').forEach(b=>b.textContent=h?'پنهان':'نمایش')}});
+document.addEventListener('submit',async e=>{if(e.target.id!=='af')return;e.preventDefault();
+ const f=new FormData(e.target),idr=String(f.get('id')||''),pw=String(f.get('pw')||''),pw2=String(f.get('pw2')||'');
+ if(busy)return;idv=idr;busy=true;err='';redraw();
+ try{err=(isReg()?await register(idr,pw,pw2):await login(idr,pw))||''}catch(x){err='خطای غیرمنتظره؛ دوباره تلاش کنید'}
+ busy=false;if(err)redraw();else{idv='';mode='login';done()}});
+return{user,logout,mask,view,bind:cb=>{done=cb}}})();
 render();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>

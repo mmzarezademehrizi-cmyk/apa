@@ -56,6 +56,11 @@ set "PFX=echo-payam"
 set /p "PFX=      Prefix [echo-payam]: "
 for /f "delims=" %%i in ('powershell -NoProfile -Command "('%PFX%').ToLower() -replace '[^a-z0-9-]','-'"') do set "PFX=%%i"
 
+rem ---------- clean the link (accepts browser URLs like .../tree/main) ----------
+if exist "%SRC%\" goto :srcclean
+for /f "delims=" %%i in ('powershell -NoProfile -Command "('%SRC%') -replace '/tree/.*$','' -replace '/blob/.*$','' -replace '/+$','' -replace '\.git$',''"') do set "SRC=%%i"
+:srcclean
+
 rem ---------- get the source ----------
 set "WORK="
 set "CLONED=0"
@@ -85,8 +90,10 @@ if not defined UDIR if not defined ADIR goto :nofolders
 
 rem ---------- deploy ----------
 set "FAILED=0"
-if defined UDIR call :deploy "%UDIR%" "%PFX%"
-if defined ADIR call :deploy "%ADIR%" "%PFX%-admin"
+set "LIVE_U="
+set "LIVE_A="
+if defined UDIR call :deploy "%UDIR%" "%PFX%" U
+if defined ADIR call :deploy "%ADIR%" "%PFX%-admin" A
 
 if "%CLONED%"=="1" rmdir /s /q "%TEMP%\echo_payam_deploy" >nul 2>&1
 
@@ -94,9 +101,10 @@ echo.
 echo  ==================================================
 if "%FAILED%"=="1" goto :finished_err
 echo    ALL DONE
-if defined UDIR echo    User app  : https://%PFX%.pages.dev
-if defined ADIR echo    Admin app : https://%PFX%-admin.pages.dev
-echo    (if a name was already taken, Cloudflare adds a suffix - see the URLs printed above)
+if defined LIVE_U echo    User app  : %LIVE_U%
+if defined UDIR if not defined LIVE_U echo    User app  : see the Deployment complete line above
+if defined LIVE_A echo    Admin app : %LIVE_A%
+if defined ADIR if not defined LIVE_A echo    Admin app : see the Deployment complete line above
 echo  ==================================================
 echo.
 pause
@@ -117,9 +125,13 @@ echo   Folder : %~1
 echo   Project: %~2
 echo  --------------------------------------------------
 call npx --yes wrangler@latest pages project create %~2 --production-branch main >nul 2>&1
-call npx --yes wrangler@latest pages deploy "%~1" --project-name %~2 --branch main --commit-dirty=true
-if errorlevel 1 goto :deploy_fail
-echo  [OK] %~2  -^>  https://%~2.pages.dev
+call npx --yes wrangler@latest pages deploy "%~1" --project-name %~2 --branch main --commit-dirty=true > "%TEMP%\wr_out.txt" 2>&1
+set "RC=%errorlevel%"
+type "%TEMP%\wr_out.txt"
+if not "%RC%"=="0" goto :deploy_fail
+for /f "delims=" %%u in ('powershell -NoProfile -Command "$t=Get-Content -Raw '%TEMP%\wr_out.txt'; if($t -match 'https://[a-z0-9]+\.([a-z0-9-]+\.pages\.dev)'){'https://'+$Matches[1]}"') do set "LIVE_%~3=%%u"
+del "%TEMP%\wr_out.txt" >nul 2>&1
+echo  [OK] %~2
 exit /b 0
 :deploy_fail
 set "FAILED=1"

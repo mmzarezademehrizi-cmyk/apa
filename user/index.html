@@ -153,6 +153,26 @@ a{color:inherit;text-decoration:none}
 .call h2{margin-top:18px;text-align:center}
 .call p{opacity:.7;text-align:center}
 .end{width:64px;height:64px;border-radius:50%;background:#ef4444;display:grid;place-items:center;color:#fff}
+.auth{flex:1;min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px;overflow-y:auto;background:radial-gradient(900px 420px at 50% -8%,rgba(37,99,235,.2),transparent),var(--bg)}
+.authov{position:fixed;inset:0;z-index:100;display:flex;background:var(--bg)}
+.acard{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px 22px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px -20px rgba(15,23,42,.3)}
+.alogo{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;display:grid;place-items:center;margin:0 auto}
+.acard h1{text-align:center;font-size:22px;color:var(--ink)}
+.asub{text-align:center;color:var(--mut);font-size:14px;margin-top:-6px}
+.atabs{display:flex;background:var(--field);border-radius:99px;padding:4px}
+.atabs button{flex:1;padding:8px;border-radius:99px;font-weight:600;font-size:14px;color:var(--mut)}
+.atabs button.on{background:var(--card);color:var(--pri);box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.acard label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink)}
+.acard input{width:100%;border:1px solid var(--line);background:var(--field);border-radius:12px;padding:11px 14px;font:inherit;color:var(--ink);outline:0;text-align:left}
+.acard input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.2)}
+.pw{position:relative;display:block}
+.pw input{padding-inline-start:64px}
+.pw button{position:absolute;inset-inline-start:6px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--pri);font-weight:700;padding:4px 8px}
+.hint{color:var(--mut);font-size:12px;margin-top:-4px}
+.aerr{min-height:20px;color:var(--red);font-size:13px;font-weight:600}
+.abtn{background:var(--pri);color:#fff;border-radius:99px;padding:12px;font-weight:700;font-size:15px}
+.abtn:disabled{opacity:.6}
+.anote{text-align:center;color:var(--mut);font-size:11.5px}
 </style>
 </head>
 <body>
@@ -257,12 +277,12 @@ const peopleRow=(id,sub)=>{const p=PEOPLE[id];return `<div class="row" data-go="
 function callsView(){return topbar('تماس‌ها')+`<div class="scroll"><div class="card">${CALLS.map(c=>{const p=PEOPLE[c.p];return `<div class="row" data-call="${c.p}" data-v="${c.v?1:''}">${av(p.name,48)}<div class="m"><span class="n" style="${c.k==='miss'?'color:var(--red)':''}"><span>${esc(p.name)}</span></span><div class="l">${{in:'ورودی',out:'خروجی',miss:'بی‌پاسخ'}[c.k]} · ${c.w}</div></div><span style="color:var(--pri)">${ic(c.v?'video':'phone',20)}</span></div>`}).join('')}</div></div>`+nav('calls')}
 function contactsView(){return topbar('مخاطبین')+`<div class="scroll"><div class="card">${Object.keys(PEOPLE).map(id=>peopleRow(id,'open/'+id)).join('')}</div></div>`+nav('contacts')}
 function setRow(i,t,s,x='',a='',cls=''){return `<div class="li ${cls}" ${a}><span class="ico">${ic(i)}</span><span class="tx"><b>${t}${x}</b><small>${s}</small></span><span class="ch">${ic('chev',18)}</span></div>`}
-function settingsView(){return topbar('تنظیمات')+`<div class="scroll"><div class="card me-card"><div class="top2">${av('کیان پارسا',64,true)}<div style="flex:1"><b style="font-size:18px;display:flex;gap:5px;align-items:center">کیان پارسا ${VF}</b><div style="direction:ltr;text-align:right;color:var(--mut);font-size:13px">@kian_parsa · +۹۸ ۹۳۵ *** ۱۲۳۴</div></div><button class="ib pri" data-toast="ویرایش پروفایل">${ic('pencil',18)}</button><button class="ib pri" data-toast="کد QR">${ic('qr',18)}</button></div><div class="gold" data-toast="نسخه طلایی فعال است"><span class="ico">${ic('check',20)}</span><span style="flex:1"><b style="font-size:14px">نسخه طلایی فعال است</b><small style="display:block;color:var(--mut)">فضای ابری نامحدود و سرعت حداکثری</small></span></div></div>
+function settingsView(){return topbar('تنظیمات')+`<div class="scroll"><div class="card me-card"><div class="top2">${av('کیان پارسا',64,true)}<div style="flex:1"><b style="font-size:18px;display:flex;gap:5px;align-items:center">کیان پارسا ${VF}</b><div style="direction:ltr;text-align:right;color:var(--mut);font-size:13px">${esc(Auth.mask())}</div></div><button class="ib pri" data-toast="ویرایش پروفایل">${ic('pencil',18)}</button><button class="ib pri" data-toast="کد QR">${ic('qr',18)}</button></div><div class="gold" data-toast="نسخه طلایی فعال است"><span class="ico">${ic('check',20)}</span><span style="flex:1"><b style="font-size:14px">نسخه طلایی فعال است</b><small style="display:block;color:var(--mut)">فضای ابری نامحدود و سرعت حداکثری</small></span></div></div>
 <div class="h3">عمومی و ظاهری</div><div class="card">${setRow('user','حساب کاربری و پروفایل','شماره تماس، نام کاربری، بیوگرافی','','data-toast="حساب کاربری"')}${setRow('drop','گفتگوها و تم','اندازه فونت، تصویر پس‌زمینه، انیمیشن‌ها',`<span class="tag">${S.dark?'تم تیره':'تم نیلی'}</span>`,'data-act="theme"')}<div class="li" data-act="notif"><span class="ico">${ic('bell')}</span><span class="tx"><b>اعلان‌ها و صداها</b><small>پیش‌نمایش پیام، گروه‌ها، زنگ تماس</small></span><span class="tg ${S.notif?'on':''}"></span></div></div>
 <div class="h3">امنیت و ذخیره‌سازی</div><div class="card">${setRow('lock','حریم خصوصی و امنیت','تأیید دو مرحله‌ای، قفل بیومتریک','','data-toast="حریم خصوصی"')}${setRow('pie','داده‌ها و حافظه ذخیره‌سازی','حافظه کش، دانلود خودکار','','data-act="cache"')}${setRow('monitor','دستگاه‌های متصل','لپ‌تاپ مک، نسخه وب، تبلت اندروید',`<span class="tag">۳ فعال</span>`,'data-toast="دستگاه‌ها"')}</div>
 <div class="h3">زبان و منطقه</div><div class="card">${setRow('globe','زبان اپلیکیشن','تقویم خورشیدی و اعداد فارسی فعال','<span class="tag">فارسی (پیش‌فرض)</span>','data-toast="زبان فارسی فعال است"')}</div>
 <div class="h3">پشتیبانی و ارتباط</div><div class="card">${setRow('help','راهنما و سوالات متداول','پشتیبانی آنلاین ۲۴ ساعته','','data-toast="پشتیبانی"')}${setRow('userPlus','دعوت از دوستان','اشتراک لینک اختصاصی عضویت','','data-act="invite"')}${deferred?setRow('down','نصب اپلیکیشن','افزودن «پیام» به صفحه اصلی','','data-act="install"'):''}</div>
-<div class="card" style="margin-top:14px"><div class="li" data-act="clean"><span class="ico">${ic('trash')}</span><span class="tx"><b>پاکسازی خودکار کش</b><small>از اداره‌سازی فضای گوشی هر هفته</small></span><span class="tg ${S.clean?'on':''}"></span></div></div><div class="ver">پیام‌رسان هوشمند پیام<br>نسخه ۲.۴.۰<br>ارتباط امن با رمزنگاری سرتاسری</div></div>`+nav('settings')}
+<div class="card" style="margin-top:14px"><div class="li" data-act="clean"><span class="ico">${ic('trash')}</span><span class="tx"><b>پاکسازی خودکار کش</b><small>از اداره‌سازی فضای گوشی هر هفته</small></span><span class="tg ${S.clean?'on':''}"></span></div></div><div class="card" style="margin-top:14px">${setRow('lock','خروج از حساب','','','data-act="logout"','red')}</div><div class="ver">پیام‌رسان هوشمند پیام<br>نسخه ۲.۴.۰<br>ارتباط امن با رمزنگاری سرتاسری</div></div>`+nav('settings')}
 function profileView(id){const p=PEOPLE[id];if(!p)return chatsView();const B=!!S.blocked[id],M=!!S.muted[id];
  const tabs=[['عکس و ویدیو','۱۲۴'],['فایل‌ها','۱۸'],['لینک‌ها','۴۲'],['صداها','۹']],hs=[220,260,150,190];
  return `<header class="top"><a class="ib" href="#chat/${id}" aria-label="بازگشت">${ic('back')}</a><h1 style="color:var(--ink);font-size:17px">پروفایل مخاطب</h1></header><div class="scroll"><div class="card hero">${av(p.name,110,p.on)}<h2>${esc(p.name)}${p.vf?VF:''}</h2><span class="pill">@${p.user}</span><span class="pill">${p.phone}</span><p>${esc(p.bio)}</p></div>
@@ -287,6 +307,7 @@ function chatView(id){const c=S.chats.find(x=>x.id===id);if(!c)return chatsView(
  (c.type==='channel'?`<div class="comp"><div class="ro">فقط ادمین‌ها می‌توانند پیام ارسال کنند</div></div>`:S.blocked[id]?`<div class="comp"><div class="ro">این مخاطب را مسدود کرده‌اید</div></div>`:`<div class="comp"><div class="f"><button class="ib" data-toast="دوربین" aria-label="دوربین">${ic('cam',20)}</button><button class="ib" data-toast="پیوست" aria-label="پیوست">${ic('clip',20)}</button><input id="in" autocomplete="off" placeholder="پیام خود را بنویسید…" enterkeyhint="send"><button class="ib" data-act="emoji" aria-label="ایموجی">${ic('smile',20)}</button></div><button class="send" data-act="send" aria-label="ارسال">${ic('send',20)}</button></div>`)}
 function route(){const [p,id]=(location.hash.slice(1)||'chats').split('/');return{p,id}}
 function render(){const{p,id}=route();stopPlay();
+ if(!Auth.user()){app.innerHTML=Auth.view();Auth.bind(render);return}
  if(p==='open'){let c=S.chats.find(x=>x.id===id);if(!c&&PEOPLE[id]){c={id,name:PEOPLE[id].name,type:'personal',time:now(),last:'',msgs:[]};S.chats.push(c);save()}return location.replace('#chat/'+id)}
  app.innerHTML=p==='chat'?chatView(id):p==='profile'?profileView(id):p==='calls'?callsView():p==='contacts'?contactsView():p==='settings'?settingsView():chatsView();
  const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight;
@@ -322,6 +343,7 @@ app.addEventListener('click',e=>{const t=e.target;
   else if(k==='clean'){S.clean=!S.clean;save();render()}
   else if(k==='mute'){S.muted[id]=!S.muted[id];save();render()}
   else if(k==='block'){const b=S.blocked[id];if(b||confirm('این مخاطب مسدود شود؟')){S.blocked[id]=!b;save();render()}}
+  else if(k==='logout'){if(confirm('از حساب خود خارج می‌شوید؟')){Auth.logout();location.hash='chats';render()}}
   else if(k==='cache'){toast('حافظه کش پاک شد')}
   else if(k==='invite'||k==='share'){const txt=k==='share'?'مخاطب: '+PEOPLE[id].name+' @'+PEOPLE[id].user:'به پیام‌رسان پیام بپیوند!';
    if(navigator.share)navigator.share({title:'پیام',text:txt,url:location.href.split('#')[0]}).catch(()=>{});else{navigator.clipboard&&navigator.clipboard.writeText(txt+' '+location.href.split('#')[0]);toast('لینک کپی شد')}}
@@ -338,6 +360,65 @@ app.addEventListener('input',e=>{if(e.target.id==='q'){q=e.target.value.trim();$
 app.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='in'){e.preventDefault();send()}});
 window.addEventListener('hashchange',render);
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;if(route().p==='settings')render()});
+/* ───── Auth (محلی؛ بعداً با بک‌اند واقعی جایگزین می‌شود) ───── */
+const Auth=(()=>{
+const ADMIN=false,K='payam-user-auth-v1',SK='payam-user-session-v1';
+let mode='login',err='',busy=false,idv='',done=()=>{};
+const rd=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+const wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const DB=()=>rd(K,{users:[],lock:{n:0,until:0}});
+const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b)));
+const unb=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const en=s=>s.replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+async function hash(pw,salt){const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveBits']);return b64(await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt,iterations:150000},k,256))}
+function ident(v){v=en(String(v).trim());if(!v)return null;
+ if(v.includes('@')){v=v.toLowerCase();return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)?{t:'email',v}:null}
+ let p=v.replace(/[\s\-()+]/g,'');if(p.startsWith('0098'))p='0'+p.slice(4);else if(p.startsWith('98'))p='0'+p.slice(2);
+ return /^09\d{9}$/.test(p)?{t:'phone',v:p}:null}
+async function register(idr,pw,pw2){
+ if(!(window.crypto&&crypto.subtle))return'مرورگر از رمزنگاری پشتیبانی نمی‌کند (آدرس باید HTTPS باشد)';
+ const id=ident(idr);if(!id)return'ایمیل یا شماره موبایل معتبر وارد کنید (مثال: 09121234567)';
+ if(pw.length<8||!/\d/.test(pw)||!/\p{L}/u.test(pw))return'رمز عبور باید حداقل ۸ کاراکتر و شامل حرف و عدد باشد';
+ if(pw!==pw2)return'تکرار رمز عبور با رمز عبور یکسان نیست';
+ const d=DB();
+ if(ADMIN&&d.users.length)return'حساب مدیر قبلاً ایجاد شده است';
+ if(d.users.some(u=>u.v===id.v))return'این حساب قبلاً ثبت‌نام کرده است';
+ const salt=crypto.getRandomValues(new Uint8Array(16));
+ const u={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),t:id.t,v:id.v,s:b64(salt),h:await hash(pw,salt),at:Date.now()};
+ d.users.push(u);wr(K,d);wr(SK,{uid:u.id});return null}
+async function login(idr,pw){
+ if(!(window.crypto&&crypto.subtle))return'مرورگر از رمزنگاری پشتیبانی نمی‌کند (آدرس باید HTTPS باشد)';
+ const d=DB(),now=Date.now();d.lock=d.lock||{n:0,until:0};
+ if(d.lock.until>now)return'تلاش ناموفق زیاد بود؛ '+fa(Math.ceil((d.lock.until-now)/1000))+' ثانیه صبر کنید';
+ const id=ident(idr),u=id&&d.users.find(x=>x.v===id.v);
+ const ok=u&&(await hash(pw,unb(u.s)))===u.h;
+ if(!ok){d.lock.n++;if(d.lock.n>=5)d.lock={n:0,until:now+30000};wr(K,d);return'ایمیل/شماره یا رمز عبور اشتباه است'}
+ d.lock={n:0,until:0};wr(K,d);wr(SK,{uid:u.id});return null}
+const user=()=>{const s=rd(SK,null);return s&&DB().users.find(u=>u.id===s.uid)||null};
+const logout=()=>{try{localStorage.removeItem(SK)}catch(e){}mode='login';err='';idv='';busy=false};
+const mask=()=>{const u=user();if(!u)return'';return u.t==='email'?u.v[0]+'***'+u.v.slice(u.v.indexOf('@')-1):u.v.slice(0,4)+'***'+u.v.slice(-4)};
+const first=()=>ADMIN&&!DB().users.length;
+const isReg=()=>ADMIN?first():mode==='reg';
+function view(){const reg=isReg();
+ const sub=ADMIN?(reg?'ایجاد حساب مدیر (اولین ورود)':'ورود به پنل مدیریت'):(reg?'ایجاد حساب جدید':'ورود به حساب');
+ const pwf=(n,l,ac)=>`<label>${l}<span class="pw"><input name="${n}" type="password" dir="ltr" autocomplete="${ac}" required><button type="button" data-a="eye">نمایش</button></span></label>`;
+ return `<div class="auth"><form class="acard" id="af" novalidate><div class="alogo"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ADMIN?'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>':'<path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8z"/>'}</svg></div><h1>${ADMIN?'پنل مدیریت پیام':'پیام'}</h1><p class="asub">${sub}</p>
+${ADMIN?'':`<div class="atabs"><button type="button" data-a="tab" data-m="login" class="${reg?'':'on'}">ورود</button><button type="button" data-a="tab" data-m="reg" class="${reg?'on':''}">ثبت‌نام</button></div>`}
+<label>ایمیل یا شماره موبایل<input name="id" dir="ltr" autocomplete="username" inputmode="email" placeholder="name@example.com  یا  09123456789" value="${esc(idv)}" required></label>
+${pwf('pw','رمز عبور',reg?'new-password':'current-password')}${reg?pwf('pw2','تکرار رمز عبور','new-password')+'<small class="hint">حداقل ۸ کاراکتر، شامل حرف و عدد</small>':''}
+<div class="aerr" role="alert">${esc(err)}</div><button class="abtn" ${busy?'disabled':''}>${busy?'لطفاً صبر کنید…':reg?'ثبت‌نام':'ورود'}</button>
+<p class="anote">فعلاً حساب‌ها فقط روی همین مرورگر ذخیره می‌شوند.</p></form></div>`}
+const redraw=()=>{const a=document.querySelector('.auth');if(a)a.outerHTML=view()};
+const keep=()=>{const i=document.querySelector('#af [name=id]');if(i)idv=i.value};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;
+ if(t.dataset.a==='tab'){keep();mode=t.dataset.m;err='';redraw()}
+ else if(t.dataset.a==='eye'){const ins=[...document.querySelectorAll('#af [name^=pw]')],h=ins[0].type==='password';ins.forEach(i=>i.type=h?'text':'password');document.querySelectorAll('#af [data-a=eye]').forEach(b=>b.textContent=h?'پنهان':'نمایش')}});
+document.addEventListener('submit',async e=>{if(e.target.id!=='af')return;e.preventDefault();
+ const f=new FormData(e.target),idr=String(f.get('id')||''),pw=String(f.get('pw')||''),pw2=String(f.get('pw2')||'');
+ if(busy)return;idv=idr;busy=true;err='';redraw();
+ try{err=(isReg()?await register(idr,pw,pw2):await login(idr,pw))||''}catch(x){err='خطای غیرمنتظره؛ دوباره تلاش کنید'}
+ busy=false;if(err)redraw();else{idv='';mode='login';done()}});
+return{user,logout,mask,view,bind:cb=>{done=cb}}})();
 applyTheme();render();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>

@@ -1,4 +1,4 @@
-const V = 'payam-user-v2';
+const V = 'payam-user-v3';
 const ASSETS = ['./', 'index.html', 'manifest.webmanifest', 'fonts/Vazirmatn.woff2', 'icons/icon-192.png', 'icons/icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(V).then(c => c.addAll(ASSETS))); self.skipWaiting(); });
 self.addEventListener('activate', e => {

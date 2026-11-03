@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'auth.dart';
 import 'chat.dart';
 import 'state.dart';
 import 'widgets.dart';
@@ -407,7 +408,7 @@ class SettingsTab extends StatelessWidget {
                     ]),
                     Directionality(
                       textDirection: TextDirection.ltr,
-                      child: Text('@kian_parsa · +۹۸ ۹۳۵ *** ۱۲۳۴', style: TextStyle(fontSize: 13, color: p.mut)),
+                      child: Text(auth.masked, style: TextStyle(fontSize: 13, color: p.mut)),
                     ),
                   ]),
                 ),
@@ -477,6 +478,10 @@ class SettingsTab extends StatelessWidget {
             child: InfoRow(Icons.cleaning_services_outlined, 'پاکسازی خودکار کش',
                 sub: 'از اداره‌سازی فضای گوشی هر هفته',
                 trailing: Switch(value: app.clean, onChanged: (_) => app.toggleClean()), onTap: app.toggleClean),
+          ),
+          const SizedBox(height: 14),
+          PCard(
+            child: InfoRow(Icons.logout, 'خروج از حساب', danger: true, onTap: () => confirmLogout(context)),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 18),
